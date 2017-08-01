@@ -1,16 +1,16 @@
 ## Example nginx config(with tls-certificate) 
 
 Next we configure nginx server with 3 virtual hosts.
-site-proxy.in.example.com - it's a proxy to jabber.example.com:1111
-site-0.in.example.com - just site
-site-1.in.example.com - just site
+site-proxy.in.devexperts.com - it's a proxy to jabber.devexperts.com:1111
+site-0.in.devexperts.com - just site
+site-1.in.devexperts.com - just site
 
 And redirect host from 80 to 443
 
 0. Setup tls_cetificate, and when we play tls_certificate_role, we get variable: tls_certificate_path_crt_full, tls_certificate_path_key,tls_certificate_path_crt,tls_certificate_path_ca
 
 
-    tls_certificate_name: "star.in.example.com"
+    tls_certificate_name: "star.in.devexperts.com"
 
 
 Configure proxy, part 1
@@ -20,34 +20,34 @@ Configure proxy, part 1
         strategy: "ip_hash" # "least_conn", etc.
         keepalive: 16 # optional
         servers: {
-          "jabber.example.com:1111"
+          "jabber.devexperts.com:1111"
         }
     
 Redirect host from 80 to 443
     
     nginx_vhosts:
       - listen: "80"
-        server_name: "site-proxy.in.example.com www.site-proxy.in.example.com"
-        return: "301 https://site-proxy.in.example.com$request_uri"
-        filename: "site-proxy.in.example.com.80.conf"
-      - server_name: "site-1.in.example.com www.site-1.in.example.com"
-        return: "301 https://site-1.in.example.com$request_uri"
-        filename: "site-1.in.example.com.80.conf"
-        access_log: "/var/lib/nginx/site-1.in.example.com.access.log"
-        error_log: "/var/lib/nginx/site-1.in.example.com.error.log"
-      - server_name: "site-0.in.example.com www.site-0.in.example.com"
-        return: "301 https://site-0.in.example.com$request_uri"
-        filename: "site-0.in.example.com.80.conf"
-        access_log: "/var/lib/nginx/site-0.in.example.com.access.log"
-        error_log: "/var/lib/nginx/site-0.in.example.com.error.log"
+        server_name: "site-proxy.in.devexperts.com www.site-proxy.in.devexperts.com"
+        return: "301 https://site-proxy.in.devexperts.com$request_uri"
+        filename: "site-proxy.in.devexperts.com.80.conf"
+      - server_name: "site-1.in.devexperts.com www.site-1.in.devexperts.com"
+        return: "301 https://site-1.in.devexperts.com$request_uri"
+        filename: "site-1.in.devexperts.com.80.conf"
+        access_log: "/var/lib/nginx/site-1.in.devexperts.com.access.log"
+        error_log: "/var/lib/nginx/site-1.in.devexperts.com.error.log"
+      - server_name: "site-0.in.devexperts.com www.site-0.in.devexperts.com"
+        return: "301 https://site-0.in.devexperts.com$request_uri"
+        filename: "site-0.in.devexperts.com.80.conf"
+        access_log: "/var/lib/nginx/site-0.in.devexperts.com.access.log"
+        error_log: "/var/lib/nginx/site-0.in.devexperts.com.error.log"
 
 Configure proxy, part 2. Configure proxy with http2 and ssl
 
 !! Waring http2 not working on default nginx in ubuntu 14.04. If you don't now what is it - pls skip http2 
     
       - listen: "443 ssl http2"
-        server_name: "site-proxy.in.example.com"
-        server_name_redirect: "www.site-proxy.in.example.com"
+        server_name: "site-proxy.in.devexperts.com"
+        server_name_redirect: "www.site-proxy.in.devexperts.com"
         extra_parameters: |
               ssl_certificate     {{ tls_certificate_path_crt_full }};
               ssl_certificate_key {{ tls_certificate_path_key }};
@@ -71,10 +71,10 @@ Configure proxy, part 2. Configure proxy with http2 and ssl
 Configure vhost on port 443 with http2 and ssl
        
       - listen: "443 ssl http2"
-        server_name: "site-0.in.example.com"
-        root: "/var/www/site-0.in.example.com"
-        access_log: "/var/lib/nginx/site-0.in.example.com.access.log"
-        error_log: "/var/lib/nginx/site-0.in.example.com.error.log"
+        server_name: "site-0.in.devexperts.com"
+        root: "/var/www/site-0.in.devexperts.com"
+        access_log: "/var/lib/nginx/site-0.in.devexperts.com.access.log"
+        error_log: "/var/lib/nginx/site-0.in.devexperts.com.error.log"
         index: "index.php index.html index.htm"
         extra_parameters: |
               ssl_certificate     {{ tls_certificate_path_crt_full }};
@@ -83,11 +83,11 @@ Configure vhost on port 443 with http2 and ssl
               ssl_ciphers         HIGH:!aNULL:!MD5;
     
       - listen: "443 ssl http2"
-        server_name: "site-1.in.example.com"
-        root: "/var/www/site-1.in.example.com"
+        server_name: "site-1.in.devexperts.com"
+        root: "/var/www/site-1.in.devexperts.com"
         index: "index.php index.html index.htm"
-        access_log: "/var/lib/nginx/site-1.in.example.com.access.log"
-        error_log: "/var/lib/nginx/site-1.in.example.com.error.log"
+        access_log: "/var/lib/nginx/site-1.in.devexperts.com.access.log"
+        error_log: "/var/lib/nginx/site-1.in.devexperts.com.error.log"
         extra_parameters: |
               ssl_certificate     {{ tls_certificate_path_crt_full }};
               ssl_certificate_key {{ tls_certificate_path_key }};
@@ -96,4 +96,4 @@ Configure vhost on port 443 with http2 and ssl
 
               
 
-tls_certificate_path_crt_full and tls_certificate_path_key depended from tls_certificate_name: "star.in.example.com"
+tls_certificate_path_crt_full and tls_certificate_path_key depended from tls_certificate_name: "star.in.devexperts.com"

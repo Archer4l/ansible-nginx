@@ -63,7 +63,9 @@ http {
         {{ upstream.strategy }};
 {% endif %}
 {% if upstream.servers is defined and  upstream.servers_custom is not defined %}
+  {% for server in upstream.servers %}
         server {{ server }};
+  {% endfor %}
 {% endif %}
 {% if upstream.servers is not defined and  upstream.servers_custom is defined %}
     {{ upstream.servers_custom|indent(4) }}
